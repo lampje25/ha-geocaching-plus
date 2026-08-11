@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Geocaching Plus",
+        "description": "Set up Geocaching Plus using your existing Geocaching integration."
+      }
+    },
+    "abort": {
+      "already_configured": "Geocaching Plus is already configured.",
+      "geocaching_not_configured": "Set up the official Geocaching integration first."
+    }
+  },
+  "options": {
+    "error": {
+      "invalid_recent_logs_count": "Enter a number between 1 and 50."
+    },
+    "step": {
+      "init": {
+        "title": "Geocaching Plus settings",
+        "description": "Configure which additional Geocaching data should be retrieved.",
+        "data": {
+          "recent_logs_count": "Number of recent logs"
+        },
+        "data_description": {
+          "recent_logs_count": "Number of recent Geocaching logs to retrieve (1–50)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Geocaching Plus",
+        "description": "Stel Geocaching Plus in met je bestaande Geocaching-integratie."
+      }
+    },
+    "abort": {
+      "already_configured": "Geocaching Plus is al geconfigureerd.",
+      "geocaching_not_configured": "Stel eerst de officiële Geocaching-integratie in."
+    }
+  },
+  "options": {
+    "error": {
+      "invalid_recent_logs_count": "Vul een getal tussen 1 en 50 in."
+    },
+    "step": {
+      "init": {
+        "title": "Geocaching Plus-instellingen",
+        "description": "Configureer welke extra Geocaching-gegevens moeten worden opgehaald.",
+        "data": {
+          "recent_logs_count": "Aantal recente logs"
+        },
+        "data_description": {
+          "recent_logs_count": "Aantal recente Geocaching-logs dat moet worden opgehaald (1–50)."
+        }
+      }
+    }
+  }
+}
