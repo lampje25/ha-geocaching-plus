@@ -4,7 +4,7 @@ Geocaching Plus is a custom Home Assistant integration that adds additional Geoc
 
 It reuses the existing Geocaching authentication from Home Assistant, so no additional Geocaching OAuth credentials are required.
 
-> **Status:** Early release (v0.1.0). Feedback and bug reports are very welcome.
+> **Status:** Early release (v0.2.0). Feedback and bug reports are very welcome.
 
 ## Features
 
@@ -30,6 +30,70 @@ A separate sensor exposes your latest Geocaching log, including additional attri
 ### Membership level
 
 Shows your Geocaching membership level, such as Basic, Charter or Premium.
+
+### Owned geocaches
+
+Geocaching Plus automatically retrieves geocaches owned by the authenticated Geocaching account.
+
+Each owned geocache is represented as a separate Home Assistant device with:
+
+- Current cache status
+- Find count
+- Favorite Point count
+- Last visited date
+- Latest log type
+- Logger username
+- Log date and complete log text
+- Number of attached images
+- Whether a Favorite Point was awarded
+- A direct link to the log
+
+### Maintenance monitoring
+
+Each owned geocache has a **Maintenance required** binary sensor.
+
+The sensor turns on after a `Needs Maintenance` log and returns to normal after a newer `Owner Maintenance` log.
+
+### New-log events
+
+### Example notification automation
+
+The following automation creates a Home Assistant notification for every new log. Maintenance logs receive a different title.
+
+```yaml
+alias: Geocaching Plus - new owned-cache log
+description: Notify when an owned geocache receives a new log
+triggers:
+  - trigger: event
+    event_type: geocaching_plus_new_owned_cache_log
+
+actions:
+  - action: persistent_notification.create
+    data:
+      title: >-
+        {% if trigger.event.data.maintenance_required %}
+          Maintenance required: {{ trigger.event.data.cache_name }}
+        {% else %}
+          New log: {{ trigger.event.data.cache_name }}
+        {% endif %}
+      message: >-
+        {{ trigger.event.data.logger }} posted a
+        {{ trigger.event.data.log_type }} log.
+
+        {{ trigger.event.data.text }}
+
+        {{ trigger.event.data.url }}
+
+mode: queued
+max: 20
+```
+
+Replace `persistent_notification.create` with a mobile-app notification action if notifications should be sent to a phone.
+
+When a new log is detected on an owned geocache, Geocaching Plus fires:
+
+```text
+geocaching_plus_new_owned_cache_log
 
 ## Requirements
 
@@ -68,13 +132,16 @@ Default: **10**
 
 ## Entities
 
-The initial release provides:
+Geocaching Plus provides account-wide entities and three entities for every owned geocache:
 
-| Entity | Description |
-| --- | --- |
-| Membership level | Your Geocaching membership level |
-| Latest log | Your most recent Geocaching log |
-| Recent logs | Recent Geocaching logs stored as entity attributes |
+| Entity | Scope | Description |
+| --- | --- | --- |
+| Membership level | Account | Geocaching membership level |
+| Latest log | Account | Most recent log placed by the authenticated user |
+| Recent logs | Account | Recent user logs stored as entity attributes |
+| Status | Owned cache | Current status and cache statistics |
+| Latest log | Owned cache | Newest log with logger, text, date and URL |
+| Maintenance required | Owned cache | Problem sensor for unresolved maintenance |
 
 The Recent logs entity can be used in dashboard templates to display a list of recent finds and DNFs.
 
@@ -121,7 +188,7 @@ Possible future features include:
 - Additional Geocaching statistics
 - Better dashboard presentation
 - More information about recent logs
-- Cache-related functionality
+- Additional owned-cache information and configurable notifications
 - Trackables
 - Additional configurable options
 

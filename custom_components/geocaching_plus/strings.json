@@ -27,5 +27,29 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "membership_level": {
+        "name": "Membership level"
+      },
+      "latest_log": {
+        "name": "Latest log"
+      },
+      "recent_logs": {
+        "name": "Recent logs"
+      },
+      "owned_cache_status": {
+        "name": "Status"
+      },
+      "owned_cache_latest_log": {
+        "name": "Latest log"
+      }
+    },
+    "binary_sensor": {
+      "maintenance_required": {
+        "name": "Maintenance required"
+      }
+    }
   }
 }
