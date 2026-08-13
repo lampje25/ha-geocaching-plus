@@ -4,7 +4,7 @@ Geocaching Plus is a custom Home Assistant integration that adds additional Geoc
 
 It reuses the existing Geocaching authentication from Home Assistant, so no additional Geocaching OAuth credentials are required.
 
-> **Status:** Early release (v0.2.0). Feedback and bug reports are very welcome.
+> **Status:** Early release (v0.2.1). Feedback and bug reports are very welcome.
 
 ## Features
 
