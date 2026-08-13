@@ -165,7 +165,7 @@ class GeocachingPlusDataUpdateCoordinator(DataUpdateCoordinator[GeocachingPlusDa
                 ),
             )
 
-            LOGGER.info(
+            LOGGER.debug(
                 "Found %s owned geocaches for %s",
                 len(owned_cache_results),
                 username,
@@ -178,7 +178,7 @@ class GeocachingPlusDataUpdateCoordinator(DataUpdateCoordinator[GeocachingPlusDa
                 if not cache_code:
                     continue
 
-                LOGGER.info(
+                LOGGER.debug(
                     "Owned geocache: %s - %s - %s",
                     cache_code,
                     cache.get("name"),
@@ -215,7 +215,7 @@ class GeocachingPlusDataUpdateCoordinator(DataUpdateCoordinator[GeocachingPlusDa
                 )
 
                 if latest_log:
-                    LOGGER.info(
+                    LOGGER.debug(
                         "Latest log for %s: %s by %s on %s; maintenance required: %s",
                         cache_code,
                         latest_log.get("geocacheLogType", {}).get("name"),
@@ -224,7 +224,7 @@ class GeocachingPlusDataUpdateCoordinator(DataUpdateCoordinator[GeocachingPlusDa
                         maintenance_required,
                     )
                 else:
-                    LOGGER.info(
+                    LOGGER.debug(
                         "No logs found for owned geocache %s",
                         cache_code,
                     )

@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build release package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Validate release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          manifest = json.loads(
+              Path("custom_components/geocaching_plus/manifest.json").read_text()
+          )
+          expected_tag = f"v{manifest['version']}"
+          release_tag = os.environ["RELEASE_TAG"]
+
+          if release_tag != expected_tag:
+              raise SystemExit(
+                  f"Release tag {release_tag!r} does not match {expected_tag!r}"
+              )
+          PY
+
+      - name: Build integration ZIP
+        working-directory: custom_components/geocaching_plus
+        run: |
+          zip -r "$GITHUB_WORKSPACE/geocaching_plus.zip" . \
+            -x "__pycache__/" "__pycache__/*" \
+              "*/__pycache__/" "*/__pycache__/*" \
+              "*.pyc"
+
+      - name: Validate integration ZIP
+        run: |
+          unzip -t geocaching_plus.zip
+          unzip -Z1 geocaching_plus.zip | grep -Fx "__init__.py"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "manifest.json"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "config_flow.py"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "coordinator.py"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "sensor.py"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "binary_sensor.py"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "translations/en.json"
+          unzip -Z1 geocaching_plus.zip | grep -Fx "translations/nl.json"
+          if unzip -Z1 geocaching_plus.zip | grep -Eq '(^|/)__pycache__/|\.pyc$'; then
+            echo "Release ZIP contains Python cache files"
+            exit 1
+          fi
+
+      - name: Upload release ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release upload "$RELEASE_TAG" geocaching_plus.zip --clobber
