@@ -1,7 +1,7 @@
 {
   "domain": "geocaching_plus",
   "name": "Geocaching Plus",
-  "codeowners": [],
+  "codeowners": ["@lampje25"],
   "config_flow": true,
   "documentation": "https://github.com/lampje25/ha-geocaching-plus",
   "issue_tracker": "https://github.com/lampje25/ha-geocaching-plus/issues",
